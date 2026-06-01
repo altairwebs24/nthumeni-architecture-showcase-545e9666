@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 const nav = [
   { to: "/", label: "Index" },
   { to: "/projects", label: "Projects" },
+  { to: "/pricing", label: "Pricing" },
   { to: "/about", label: "Studio" },
   { to: "/contact", label: "Contact" },
 ] as const;
@@ -104,7 +105,10 @@ export function SiteLayout() {
         <div className="hairline">
           <div className="container-x py-5 text-xs text-muted-foreground flex justify-between">
             <span>© {new Date().getFullYear()} Nthumeni Architecture</span>
-            <span>All rights reserved</span>
+            <span className="flex gap-4">
+              <Link to="/login" className="hover:text-accent">Admin</Link>
+              <span>All rights reserved</span>
+            </span>
           </div>
         </div>
       </footer>

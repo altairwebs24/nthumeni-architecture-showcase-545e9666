@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { projects } from "@/lib/projects";
+import { useEffect, useState } from "react";
+import { projects as staticProjects } from "@/lib/projects";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_site/projects")({
   head: () => ({
@@ -13,7 +15,30 @@ export const Route = createFileRoute("/_site/projects")({
   component: ProjectsPage,
 });
 
+type Item = { key: string; title: string; year: string; location: string; type: string; image: string };
+
 function ProjectsPage() {
+  const base: Item[] = staticProjects.map((p) => ({
+    key: p.slug, title: p.title, year: p.year, location: p.location, type: p.type, image: p.image,
+  }));
+  const [items, setItems] = useState<Item[]>(base);
+
+  useEffect(() => {
+    supabase
+      .from("projects")
+      .select("id,title,year,location,type,image_url")
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (!data) return;
+        const fromDb: Item[] = data.map((p) => ({
+          key: p.id, title: p.title, year: p.year, location: p.location, type: p.type, image: p.image_url,
+        }));
+        setItems([...fromDb, ...base]);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <section className="container-x pt-16 md:pt-24 pb-12">
@@ -24,18 +49,13 @@ function ProjectsPage() {
       </section>
 
       <section className="container-x pb-24 space-y-20 md:space-y-28">
-        {projects.map((p, i) => (
+        {items.map((p, i) => (
           <article
-            key={p.slug}
+            key={p.key}
             className={`grid md:grid-cols-12 gap-6 md:gap-10 items-center ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}
           >
             <div className="md:col-span-8 overflow-hidden bg-muted">
-              <img
-                src={p.image}
-                alt={p.title}
-                loading="lazy"
-                className="w-full h-full object-cover aspect-[4/3]"
-              />
+              <img src={p.image} alt={p.title} loading="lazy" className="w-full h-full object-cover aspect-[4/3]" />
             </div>
             <div className="md:col-span-4">
               <p className="eyebrow">{String(i + 1).padStart(2, "0")} / {p.type}</p>
