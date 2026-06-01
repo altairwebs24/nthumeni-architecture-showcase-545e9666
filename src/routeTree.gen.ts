@@ -9,14 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as SiteRouteImport } from './routes/_site'
+import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as SiteIndexRouteImport } from './routes/_site.index'
 import { Route as SiteProjectsRouteImport } from './routes/_site.projects'
+import { Route as SitePricingRouteImport } from './routes/_site.pricing'
 import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
+import { Route as AdminAdminRouteImport } from './routes/_admin.admin'
+import { Route as AdminAdminProjectsRouteImport } from './routes/_admin.admin.projects'
+import { Route as AdminAdminPricelistsRouteImport } from './routes/_admin.admin.pricelists'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SiteRoute = SiteRouteImport.update({
   id: '/_site',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SiteIndexRoute = SiteIndexRouteImport.update({
@@ -29,6 +44,11 @@ const SiteProjectsRoute = SiteProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => SiteRoute,
 } as any)
+const SitePricingRoute = SitePricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => SiteRoute,
+} as any)
 const SiteContactRoute = SiteContactRouteImport.update({
   id: '/contact',
   path: '/contact',
@@ -39,52 +59,123 @@ const SiteAboutRoute = SiteAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => SiteRoute,
 } as any)
+const AdminAdminRoute = AdminAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminProjectsRoute = AdminAdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
+const AdminAdminPricelistsRoute = AdminAdminPricelistsRouteImport.update({
+  id: '/pricelists',
+  path: '/pricelists',
+  getParentRoute: () => AdminAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
+  '/login': typeof LoginRoute
+  '/admin': typeof AdminAdminRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/contact': typeof SiteContactRoute
+  '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
+  '/admin/pricelists': typeof AdminAdminPricelistsRoute
+  '/admin/projects': typeof AdminAdminProjectsRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof SiteIndexRoute
+  '/login': typeof LoginRoute
+  '/admin': typeof AdminAdminRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/contact': typeof SiteContactRoute
+  '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
-  '/': typeof SiteIndexRoute
+  '/admin/pricelists': typeof AdminAdminPricelistsRoute
+  '/admin/projects': typeof AdminAdminProjectsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_admin': typeof AdminRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/_site/about': typeof SiteAboutRoute
   '/_site/contact': typeof SiteContactRoute
+  '/_site/pricing': typeof SitePricingRoute
   '/_site/projects': typeof SiteProjectsRoute
   '/_site/': typeof SiteIndexRoute
+  '/_admin/admin/pricelists': typeof AdminAdminPricelistsRoute
+  '/_admin/admin/projects': typeof AdminAdminProjectsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact' | '/projects'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/admin'
+    | '/about'
+    | '/contact'
+    | '/pricing'
+    | '/projects'
+    | '/admin/pricelists'
+    | '/admin/projects'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/contact' | '/projects' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/admin'
+    | '/about'
+    | '/contact'
+    | '/pricing'
+    | '/projects'
+    | '/admin/pricelists'
+    | '/admin/projects'
   id:
     | '__root__'
+    | '/_admin'
     | '/_site'
+    | '/login'
+    | '/_admin/admin'
     | '/_site/about'
     | '/_site/contact'
+    | '/_site/pricing'
     | '/_site/projects'
     | '/_site/'
+    | '/_admin/admin/pricelists'
+    | '/_admin/admin/projects'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AdminRoute: typeof AdminRouteWithChildren
   SiteRoute: typeof SiteRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_site': {
       id: '/_site'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof SiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_site/': {
@@ -101,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteProjectsRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_site/pricing': {
+      id: '/_site/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof SitePricingRouteImport
+      parentRoute: typeof SiteRoute
+    }
     '/_site/contact': {
       id: '/_site/contact'
       path: '/contact'
@@ -115,12 +213,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteAboutRouteImport
       parentRoute: typeof SiteRoute
     }
+    '/_admin/admin': {
+      id: '/_admin/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminAdminRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/projects': {
+      id: '/_admin/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminAdminProjectsRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
+    '/_admin/admin/pricelists': {
+      id: '/_admin/admin/pricelists'
+      path: '/pricelists'
+      fullPath: '/admin/pricelists'
+      preLoaderRoute: typeof AdminAdminPricelistsRouteImport
+      parentRoute: typeof AdminAdminRoute
+    }
   }
 }
+
+interface AdminAdminRouteChildren {
+  AdminAdminPricelistsRoute: typeof AdminAdminPricelistsRoute
+  AdminAdminProjectsRoute: typeof AdminAdminProjectsRoute
+}
+
+const AdminAdminRouteChildren: AdminAdminRouteChildren = {
+  AdminAdminPricelistsRoute: AdminAdminPricelistsRoute,
+  AdminAdminProjectsRoute: AdminAdminProjectsRoute,
+}
+
+const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
+  AdminAdminRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminAdminRoute: typeof AdminAdminRouteWithChildren
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminRoute: AdminAdminRouteWithChildren,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface SiteRouteChildren {
   SiteAboutRoute: typeof SiteAboutRoute
   SiteContactRoute: typeof SiteContactRoute
+  SitePricingRoute: typeof SitePricingRoute
   SiteProjectsRoute: typeof SiteProjectsRoute
   SiteIndexRoute: typeof SiteIndexRoute
 }
@@ -128,6 +272,7 @@ interface SiteRouteChildren {
 const SiteRouteChildren: SiteRouteChildren = {
   SiteAboutRoute: SiteAboutRoute,
   SiteContactRoute: SiteContactRoute,
+  SitePricingRoute: SitePricingRoute,
   SiteProjectsRoute: SiteProjectsRoute,
   SiteIndexRoute: SiteIndexRoute,
 }
@@ -135,8 +280,20 @@ const SiteRouteChildren: SiteRouteChildren = {
 const SiteRouteWithChildren = SiteRoute._addFileChildren(SiteRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AdminRoute: AdminRouteWithChildren,
   SiteRoute: SiteRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
