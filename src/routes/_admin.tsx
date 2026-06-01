@@ -65,6 +65,7 @@ function AdminLayout() {
   const tabs = [
     { to: "/admin/projects", label: "Projects" },
     { to: "/admin/pricelists", label: "Pricelist" },
+    { to: "/admin/admins", label: "Admins" },
   ];
 
   return (

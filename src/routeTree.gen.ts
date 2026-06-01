@@ -20,6 +20,7 @@ import { Route as SiteAboutRouteImport } from './routes/_site.about'
 import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
 import { Route as AdminAdminProjectsRouteImport } from './routes/_admin.admin.projects'
 import { Route as AdminAdminPricelistsRouteImport } from './routes/_admin.admin.pricelists'
+import { Route as AdminAdminAdminsRouteImport } from './routes/_admin.admin.admins'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -74,6 +75,11 @@ const AdminAdminPricelistsRoute = AdminAdminPricelistsRouteImport.update({
   path: '/admin/pricelists',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdminAdminsRoute = AdminAdminAdminsRouteImport.update({
+  id: '/admin/admins',
+  path: '/admin/admins',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof SiteContactRoute
   '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
+  '/admin/admins': typeof AdminAdminAdminsRoute
   '/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/admin/projects': typeof AdminAdminProjectsRoute
   '/admin/': typeof AdminAdminIndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/contact': typeof SiteContactRoute
   '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
+  '/admin/admins': typeof AdminAdminAdminsRoute
   '/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/admin/projects': typeof AdminAdminProjectsRoute
   '/admin': typeof AdminAdminIndexRoute
@@ -107,6 +115,7 @@ export interface FileRoutesById {
   '/_site/pricing': typeof SitePricingRoute
   '/_site/projects': typeof SiteProjectsRoute
   '/_site/': typeof SiteIndexRoute
+  '/_admin/admin/admins': typeof AdminAdminAdminsRoute
   '/_admin/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/_admin/admin/projects': typeof AdminAdminProjectsRoute
   '/_admin/admin/': typeof AdminAdminIndexRoute
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/projects'
+    | '/admin/admins'
     | '/admin/pricelists'
     | '/admin/projects'
     | '/admin/'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/pricing'
     | '/projects'
+    | '/admin/admins'
     | '/admin/pricelists'
     | '/admin/projects'
     | '/admin'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/_site/pricing'
     | '/_site/projects'
     | '/_site/'
+    | '/_admin/admin/admins'
     | '/_admin/admin/pricelists'
     | '/_admin/admin/projects'
     | '/_admin/admin/'
@@ -234,16 +246,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdminPricelistsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_admin/admin/admins': {
+      id: '/_admin/admin/admins'
+      path: '/admin/admins'
+      fullPath: '/admin/admins'
+      preLoaderRoute: typeof AdminAdminAdminsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminAdminAdminsRoute: typeof AdminAdminAdminsRoute
   AdminAdminPricelistsRoute: typeof AdminAdminPricelistsRoute
   AdminAdminProjectsRoute: typeof AdminAdminProjectsRoute
   AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminAdminsRoute: AdminAdminAdminsRoute,
   AdminAdminPricelistsRoute: AdminAdminPricelistsRoute,
   AdminAdminProjectsRoute: AdminAdminProjectsRoute,
   AdminAdminIndexRoute: AdminAdminIndexRoute,
