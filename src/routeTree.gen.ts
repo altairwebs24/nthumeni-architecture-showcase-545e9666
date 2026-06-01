@@ -17,7 +17,7 @@ import { Route as SiteProjectsRouteImport } from './routes/_site.projects'
 import { Route as SitePricingRouteImport } from './routes/_site.pricing'
 import { Route as SiteContactRouteImport } from './routes/_site.contact'
 import { Route as SiteAboutRouteImport } from './routes/_site.about'
-import { Route as AdminAdminRouteImport } from './routes/_admin.admin'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
 import { Route as AdminAdminProjectsRouteImport } from './routes/_admin.admin.projects'
 import { Route as AdminAdminPricelistsRouteImport } from './routes/_admin.admin.pricelists'
 
@@ -59,50 +59,49 @@ const SiteAboutRoute = SiteAboutRouteImport.update({
   path: '/about',
   getParentRoute: () => SiteRoute,
 } as any)
-const AdminAdminRoute = AdminAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminProjectsRoute = AdminAdminProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => AdminAdminRoute,
+  id: '/admin/projects',
+  path: '/admin/projects',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminAdminPricelistsRoute = AdminAdminPricelistsRouteImport.update({
-  id: '/pricelists',
-  path: '/pricelists',
-  getParentRoute: () => AdminAdminRoute,
+  id: '/admin/pricelists',
+  path: '/admin/pricelists',
+  getParentRoute: () => AdminRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof SiteIndexRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AdminAdminRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/contact': typeof SiteContactRoute
   '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
   '/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/admin/projects': typeof AdminAdminProjectsRoute
+  '/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof SiteIndexRoute
   '/login': typeof LoginRoute
-  '/admin': typeof AdminAdminRouteWithChildren
   '/about': typeof SiteAboutRoute
   '/contact': typeof SiteContactRoute
   '/pricing': typeof SitePricingRoute
   '/projects': typeof SiteProjectsRoute
   '/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/admin/projects': typeof AdminAdminProjectsRoute
+  '/admin': typeof AdminAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_admin': typeof AdminRouteWithChildren
   '/_site': typeof SiteRouteWithChildren
   '/login': typeof LoginRoute
-  '/_admin/admin': typeof AdminAdminRouteWithChildren
   '/_site/about': typeof SiteAboutRoute
   '/_site/contact': typeof SiteContactRoute
   '/_site/pricing': typeof SitePricingRoute
@@ -110,36 +109,36 @@ export interface FileRoutesById {
   '/_site/': typeof SiteIndexRoute
   '/_admin/admin/pricelists': typeof AdminAdminPricelistsRoute
   '/_admin/admin/projects': typeof AdminAdminProjectsRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/login'
-    | '/admin'
     | '/about'
     | '/contact'
     | '/pricing'
     | '/projects'
     | '/admin/pricelists'
     | '/admin/projects'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/admin'
     | '/about'
     | '/contact'
     | '/pricing'
     | '/projects'
     | '/admin/pricelists'
     | '/admin/projects'
+    | '/admin'
   id:
     | '__root__'
     | '/_admin'
     | '/_site'
     | '/login'
-    | '/_admin/admin'
     | '/_site/about'
     | '/_site/contact'
     | '/_site/pricing'
@@ -147,6 +146,7 @@ export interface FileRouteTypes {
     | '/_site/'
     | '/_admin/admin/pricelists'
     | '/_admin/admin/projects'
+    | '/_admin/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,50 +213,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SiteAboutRouteImport
       parentRoute: typeof SiteRoute
     }
-    '/_admin/admin': {
-      id: '/_admin/admin'
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
       path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminAdminRouteImport
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
     '/_admin/admin/projects': {
       id: '/_admin/admin/projects'
-      path: '/projects'
+      path: '/admin/projects'
       fullPath: '/admin/projects'
       preLoaderRoute: typeof AdminAdminProjectsRouteImport
-      parentRoute: typeof AdminAdminRoute
+      parentRoute: typeof AdminRoute
     }
     '/_admin/admin/pricelists': {
       id: '/_admin/admin/pricelists'
-      path: '/pricelists'
+      path: '/admin/pricelists'
       fullPath: '/admin/pricelists'
       preLoaderRoute: typeof AdminAdminPricelistsRouteImport
-      parentRoute: typeof AdminAdminRoute
+      parentRoute: typeof AdminRoute
     }
   }
 }
 
-interface AdminAdminRouteChildren {
+interface AdminRouteChildren {
   AdminAdminPricelistsRoute: typeof AdminAdminPricelistsRoute
   AdminAdminProjectsRoute: typeof AdminAdminProjectsRoute
-}
-
-const AdminAdminRouteChildren: AdminAdminRouteChildren = {
-  AdminAdminPricelistsRoute: AdminAdminPricelistsRoute,
-  AdminAdminProjectsRoute: AdminAdminProjectsRoute,
-}
-
-const AdminAdminRouteWithChildren = AdminAdminRoute._addFileChildren(
-  AdminAdminRouteChildren,
-)
-
-interface AdminRouteChildren {
-  AdminAdminRoute: typeof AdminAdminRouteWithChildren
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
-  AdminAdminRoute: AdminAdminRouteWithChildren,
+  AdminAdminPricelistsRoute: AdminAdminPricelistsRoute,
+  AdminAdminProjectsRoute: AdminAdminProjectsRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -287,3 +277,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
